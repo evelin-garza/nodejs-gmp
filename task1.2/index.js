@@ -2,7 +2,7 @@ const csv = require('csvtojson');
 const fs = require('fs')
 
 const csvFilePath = './csv/nodejs19-hw1-ex1.csv'
-const txtFilePath = './task1.2/nodejs19-hw1-ex2.txt';
+const txtFilePath = './task1.2/txt/nodejs19-hw1-ex2.txt';
 
 const convertCsvToTxtFile = async () => {
   try {

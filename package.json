@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "task1": "nodemon ./task1.1/index.js",
-    "task2": "nodemon ./task1.2/index.js"
+    "task2": "nodemon ./task1.2/index.js",
+    "task2-lbl": "nodemon ./task1.2/pipeline-method.js"
   },
   "keywords": [],
   "author": "",
