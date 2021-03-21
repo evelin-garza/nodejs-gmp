@@ -9,6 +9,10 @@
     "task2": "nodemon --exec babel-node --presets=@babel/preset-env ./task1.2/index.js",
     "task2-lbl": "nodemon --exec babel-node --presets=@babel/preset-env ./task1.2/pipeline-method.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/evelin-garza/nodejs-gmp.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
