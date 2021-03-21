@@ -1,5 +1,5 @@
-const csv = require('csvtojson');
-const fs = require('fs')
+import csv from 'csvtojson';
+import fs from 'fs';
 
 const csvFilePath = './csv/nodejs19-hw1-ex1.csv'
 const txtFilePath = './task1.2/txt/nodejs19-hw1-ex2.txt';
