@@ -16,4 +16,4 @@
 
 - Task 1.2 (Pipeline Method):
 `npm run task2-lbl`
-The result file is stored in /task1.2/txt/nodejs19-hw1-ex2-pipeline.txt
+> The result file is stored in /task1.2/txt/nodejs19-hw1-ex2-pipeline.txt
