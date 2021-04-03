@@ -11,7 +11,7 @@ export const getUserById = (userId: string) => {
   return UserController.getUserById(userId);
 };
 
-export const createUser = (body: User) => {
+export const createUser = (body: any) => {
   const { login, password, age } = body;
   console.log('Create user');
   return UserController.createUser(login, password, age);
