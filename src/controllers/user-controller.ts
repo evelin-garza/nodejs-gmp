@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { User } from "../models/user";
+import { Constants } from '../utils/constants';
+import { createErrorMessage } from '../utils/error-handler';
 
 let users: User[] = [];
 
@@ -10,8 +12,14 @@ export const getUserById = (userId: string) => {
     const foundUser = users.find((user: User) => user.id === userId && !user.isDeleted);
     if (foundUser) {
       resolve(foundUser);
+    } else {
+      const error = createErrorMessage(
+        Constants.HTTP_NOT_FOUND,
+        Constants.NOT_FOUND_ERROR,
+        `No user found with id: ${userId}.`
+      );
+      reject(error);
     }
-    reject(`No user found with id: ${userId}`);
   });
 };
 
@@ -50,8 +58,14 @@ export const updateUser = (
         isDeleted: false
       };
       resolve(users[foundIndex]);
+    } else {
+      const error = createErrorMessage(
+        Constants.HTTP_NOT_FOUND,
+        Constants.NOT_FOUND_ERROR,
+        `Couldn't update user, id ${id} not found. `
+      );
+      reject(error);
     }
-    reject(`No user found with id: ${id}`);
   });
 };
 
@@ -61,7 +75,13 @@ export const deleteUser = (userId: string) => {
     if (foundIndex !== -1) {
       users[foundIndex].isDeleted = true;
       resolve('User was deleted successfully!');
+    } else {
+      const error = createErrorMessage(
+        Constants.HTTP_NOT_FOUND,
+        Constants.NOT_FOUND_ERROR,
+        `Couldn't delete user, id ${userId} not found. `
+      );
+      reject(error);
     }
-    reject(`No user found with id: ${userId}`);
   });
 };
