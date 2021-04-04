@@ -1,6 +1,6 @@
 # NodeJS Global Mentoring Program
 
-## Basics. Node.js fundamental theory
+## In-memory CRUD REST service with validation
 
 **Getting Started**
 
@@ -8,16 +8,48 @@
 
 `npm install`
 
-- **Task 1.1:**
+- **Start the server:**
 
-`npm run task1`
+`npm run dev`
+> The server will start running at `http://localhost:3000`
 
-- **Task 1.2:**
+- **GET users:**
 
-`npm run task2`
-> The result file is stored in `/task1.2/txt/nodejs19-hw1-ex2.txt`
+`http://localhost:3000/api/users`
 
-- **Task 1.2 (Pipeline Method):**
+- **GET auto suggest users:**
 
-`npm run task2-lbl`
-> The result file is stored in `/task1.2/txt/nodejs19-hw1-ex2-pipeline.txt`
+`http://localhost:3000/api/users?loginSubstring=sub&limit=10&order=asc`
+
+- **GET user by id:**
+
+`http://localhost:3000/api/user/id`
+
+- **POST create user:**
+
+`http://localhost:3000/api/user`
+Body
+```
+{
+  "login": "value",
+  "password": "p4ssw0rd",
+  "age": 20
+}
+```
+
+- **PUT update user:**
+
+`http://localhost:3000/api/user`
+Body
+```
+{
+  "id": "id"
+  "login": "update",
+  "password": "p4ssw0rd",
+  "age": 20
+}
+```
+
+- **DELETE soft delete user:**
+
+`http://localhost:3000/api/user/id`
