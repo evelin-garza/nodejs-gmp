@@ -1,9 +1,10 @@
 import * as UserController from '../controllers/user-controller';
 import { User } from '../models/user';
 
-export const getUsers = () => {
+export const getUsers = (query: any) => {
+  const { loginSubstring, limit, order } = query;
   console.log('Get user list');
-  return UserController.getAllUsers();
+  return UserController.getAllUsers(loginSubstring, order, limit);
 };
 
 export const getUserById = (userId: string) => {

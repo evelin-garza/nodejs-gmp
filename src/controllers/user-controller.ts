@@ -5,7 +5,23 @@ import { createErrorMessage } from '../utils/error-handler';
 
 let users: User[] = [];
 
-export const getAllUsers = () => new Promise(resolve => resolve(users.filter((user: User) => !user.isDeleted)));
+export const getAllUsers = (loginSubstring: string = '', order: string = 'asc', limit?: string) => {
+  let filteredUsers = users.filter((user: User) => {
+    return !user.isDeleted && user.login.includes(loginSubstring);
+  }).sort((a, b) => {
+    if (order === 'asc') {
+      return (a.login > b.login) ? 1 : -1
+    } else {
+      return (a.login < b.login) ? 1 : -1
+    }
+  });
+
+  if (limit) {
+    filteredUsers = filteredUsers.slice(0, parseInt(limit, 10));
+  }
+
+  return new Promise(resolve => resolve(filteredUsers));
+};
 
 export const getUserById = (userId: string) => {
   return new Promise((resolve, reject) => {
