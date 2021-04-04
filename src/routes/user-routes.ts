@@ -56,4 +56,4 @@ router.delete('/api/user/:id', (req, res) => {
   );
 });
 
-export { router as UserRoutes }
+export { router as UserRoutes };

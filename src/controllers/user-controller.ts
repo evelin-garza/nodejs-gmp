@@ -1,19 +1,18 @@
 import { v4 as uuidv4 } from 'uuid';
-import { User } from "../models/user";
+import { User } from '../models/user';
 import { Constants } from '../utils/constants';
 import { createErrorMessage } from '../utils/error-handler';
 
-let users: User[] = [];
+const users: User[] = [];
 
-export const getAllUsers = (loginSubstring: string = '', order: string = 'asc', limit?: string) => {
+export const getAllUsers = (loginSubstring = '', order = 'asc', limit?: string): Promise<User[]> => {
   let filteredUsers = users.filter((user: User) => {
     return !user.isDeleted && user.login.includes(loginSubstring);
   }).sort((a, b) => {
     if (order === 'asc') {
-      return (a.login > b.login) ? 1 : -1
-    } else {
-      return (a.login < b.login) ? 1 : -1
+      return (a.login > b.login) ? 1 : -1;
     }
+    return (a.login < b.login) ? 1 : -1;
   });
 
   if (limit) {
@@ -23,7 +22,7 @@ export const getAllUsers = (loginSubstring: string = '', order: string = 'asc', 
   return new Promise(resolve => resolve(filteredUsers));
 };
 
-export const getUserById = (userId: string) => {
+export const getUserById = (userId: string): Promise<User> => {
   return new Promise((resolve, reject) => {
     const foundUser = users.find((user: User) => user.id === userId && !user.isDeleted);
     if (foundUser) {
@@ -43,7 +42,7 @@ export const createUser = (
   login: string,
   password: string,
   age: number
-) => {
+): Promise<User> => {
   const newUser: User = {
     id: uuidv4(),
     login,
@@ -62,7 +61,7 @@ export const updateUser = (
   login: string,
   password: string,
   age: number
-) => {
+): Promise<User> => {
   return new Promise((resolve, reject) => {
     const foundIndex = users.findIndex((user: User) => user.id === id && !user.isDeleted);
     if (foundIndex !== -1) {
@@ -85,7 +84,7 @@ export const updateUser = (
   });
 };
 
-export const deleteUser = (userId: string) => {
+export const deleteUser = (userId: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     const foundIndex = users.findIndex((user: User) => user.id === userId && !user.isDeleted);
     if (foundIndex !== -1) {

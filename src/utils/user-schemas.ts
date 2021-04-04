@@ -8,7 +8,7 @@ const createUser = {
     .pattern(passwordRegex)
     .required()
     .messages({
-      "string.pattern.base": "Password must contain letters and numbers"
+      'string.pattern.base': 'Password must contain letters and numbers'
     }),
   age: Joi.number().min(4).max(130).required()
 };
