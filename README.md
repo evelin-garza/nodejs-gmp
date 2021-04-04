@@ -28,7 +28,8 @@
 - **POST create user:**
 
 `http://localhost:3000/api/user`
-Body
+
+Body:
 ```
 {
   "login": "value",
@@ -40,7 +41,8 @@ Body
 - **PUT update user:**
 
 `http://localhost:3000/api/user`
-Body
+
+Body:
 ```
 {
   "id": "id"
@@ -53,3 +55,7 @@ Body
 - **DELETE soft delete user:**
 
 `http://localhost:3000/api/user/id`
+
+- **Run ESLint:**
+
+`npm run lint`
