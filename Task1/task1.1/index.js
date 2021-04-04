@@ -7,5 +7,5 @@ const rl = readline.createInterface({
 });
 
 rl.on('line', (input) => {
-  console.log(input.split("").reverse().join(""));
+  console.log(input.split('').reverse().join(''));
 });
