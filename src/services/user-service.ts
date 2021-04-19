@@ -1,65 +1,72 @@
 import { FindOptions, Op } from 'sequelize';
-import { User as UserModel } from '../models/user.model';
-import { UserAttributes } from '../types/user';
+import { UserAttributes, UserInstance, UserModel } from '../types/user';
 
-export const getUsers = (loginSubstring = '', order = 'asc', includeDeleted = false, limit?: number): Promise<any> => {
-  const options: FindOptions = {
-    order: [['login', order]]
-  };
+export default class UserService {
+  private userModel: UserInstance;
 
-  const where: any = {};
-
-  if (loginSubstring) {
-    where.login = { [Op.like]: `%${loginSubstring}%` };
+  constructor(userModel: UserInstance) {
+    this.userModel = userModel;
   }
 
-  if (!includeDeleted) {
-    where.isDeleted = false;
-  }
+  getUsers(loginSubstring = '', order = 'asc', includeDeleted = false, limit?: number): Promise<UserModel[]> {
+    const options: FindOptions = {
+      order: [['login', order]]
+    };
 
-  options.where = where;
+    const where: any = {};
 
-  if (limit) {
-    options.limit = limit;
-  }
-
-  console.log('Get user list');
-  return UserModel.findAll(options);
-};
-
-export const getUserById = (userId: number): Promise<any> => {
-  console.log(`Get user by id: ${userId}`);
-  return UserModel.findOne({
-    where: {
-      isDeleted: false,
-      id: userId
+    if (loginSubstring) {
+      where.login = { [Op.like]: `%${loginSubstring}%` };
     }
-  });
-};
 
-export const createUser = async (user: UserAttributes): Promise<any> => {
-  console.log('Create user');
-  return UserModel.create(user);
-};
+    if (!includeDeleted) {
+      where.isDeleted = false;
+    }
 
-export const updateUser = (userId: number, user: UserAttributes): Promise<any> => {
-  console.log('Update user');
-  return UserModel.update(user, {
-    where: {
-      isDeleted: false,
-      id: userId
-    },
-    returning: true
-  });
-};
+    options.where = where;
 
-export const deleteUser = (userId: number): Promise<any> => {
-  console.log(`Delete user with id: ${userId}`);
-  return UserModel.update({ isDeleted: true }, {
-    where: {
-      isDeleted: false,
-      id: userId
-    },
-    returning: true
-  });
-};
+    if (limit) {
+      options.limit = limit;
+    }
+
+    console.log('Get user list');
+    return this.userModel.findAll(options);
+  }
+
+  getUserById(userId: number): Promise<UserModel | null> {
+    console.log(`Get user by id: ${userId}`);
+    return this.userModel.findOne({
+      where: {
+        isDeleted: false,
+        id: userId
+      }
+    });
+  }
+
+  createUser(user: UserAttributes): Promise<UserModel | null> {
+    console.log('Create user');
+    return this.userModel.create(user);
+  }
+
+  updateUser(userId: number, user: UserAttributes): Promise<[number, UserModel[]] | null> {
+    console.log('Update user');
+    return this.userModel.update(user, {
+      where: {
+        isDeleted: false,
+        id: userId
+      },
+      returning: true
+    });
+  }
+
+  deleteUser(userId: number): Promise<[number, UserModel[]] | null> {
+    console.log(`Delete user with id: ${userId}`);
+    return this.userModel.update({ isDeleted: true }, {
+      where: {
+        isDeleted: false,
+        id: userId
+      },
+      returning: true
+    });
+  }
+}

@@ -1,12 +1,14 @@
 import express from 'express';
-import * as UserService from '../services/user-service';
 import { createValidator } from 'express-joi-validation';
 import { CreateUserSchema, UpdateUserSchema, UsersQuerySchema } from '../utils/user-schemas';
 import { createErrorMessage, errorHandler } from '../utils/error-handler';
 import { Constants } from '../utils/constants';
+import UserService from '../services/user-service';
+import { User } from '../models/user.model';
 
 const router = express.Router();
 const validator = createValidator();
+const userService = new UserService(User);
 
 /* GET users list */
 router.get('/api/users',
@@ -14,7 +16,7 @@ router.get('/api/users',
   async (req, res) => {
     try {
       const { loginSubstring, order, includeDeleted, limit } = req.query || {};
-      const response = await UserService.getUsers(loginSubstring?.toString(),
+      const response = await userService.getUsers(loginSubstring?.toString(),
         order?.toString(),
         (includeDeleted === 'true'),
         (limit && parseInt(limit as string, 10)) || undefined);
@@ -31,7 +33,7 @@ router.get('/api/users',
 router.get('/api/user/:id', async (req, res) => {
   try {
     const userId = parseInt(req.params.id, 10);
-    const response = await UserService.getUserById(userId);
+    const response = await userService.getUserById(userId);
 
     console.log(JSON.stringify(response));
 
@@ -52,7 +54,7 @@ router.post('/api/user',
   async (req, res) => {
     try {
       const { login, password, age } = req.body;
-      const response = await UserService.createUser({ login, password, age });
+      const response = await userService.createUser({ login, password, age });
 
       console.log(JSON.stringify(response));
 
@@ -72,10 +74,10 @@ router.put('/api/user/:id',
       const userId = parseInt(req.params.id, 10);
       const { login, password, age } = req.body;
 
-      const user = await UserService.getUserById(userId);
+      const user = await userService.getUserById(userId);
 
       if (user) {
-        const response = await UserService.updateUser(userId, { login, password, age });
+        const response = await userService.updateUser(userId, { login, password, age });
 
         console.log(JSON.stringify(response));
 
@@ -96,10 +98,10 @@ router.put('/api/user/:id',
 router.delete('/api/user/:id', async (req, res) => {
   try {
     const userId = parseInt(req.params.id, 10);
-    const user = await UserService.getUserById(userId);
+    const user = await userService.getUserById(userId);
 
     if (user) {
-      const response = await UserService.deleteUser(userId);
+      const response = await userService.deleteUser(userId);
 
       console.log(JSON.stringify(response));
 
