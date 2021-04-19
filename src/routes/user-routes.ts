@@ -11,7 +11,7 @@ const validator = createValidator();
 const userService = new UserService(User);
 
 /* GET users list */
-router.get('/api/users',
+router.get('/',
   validator.query(UsersQuerySchema),
   async (req, res) => {
     try {
@@ -21,8 +21,6 @@ router.get('/api/users',
         (includeDeleted === 'true'),
         (limit && parseInt(limit as string, 10)) || undefined);
 
-      console.log(JSON.stringify(response));
-
       res.status(Constants.HTTP_OK).json(response);
     } catch (err) {
       errorHandler(err, res);
@@ -30,15 +28,11 @@ router.get('/api/users',
   });
 
 /* GET user by ID */
-router.get('/api/user/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const userId = parseInt(req.params.id, 10);
-
     if (!isNaN(userId)) {
       const response = await userService.getUserById(userId);
-
-      console.log(JSON.stringify(response));
-
       if (response) {
         res.status(Constants.HTTP_OK).json(response);
       } else {
@@ -55,15 +49,12 @@ router.get('/api/user/:id', async (req, res) => {
 });
 
 /* POST create new user */
-router.post('/api/user',
+router.post('/',
   validator.body(CreateUserSchema),
   async (req, res) => {
     try {
       const { login, password, age } = req.body;
       const response = await userService.createUser({ login, password, age });
-
-      console.log(JSON.stringify(response));
-
       if (response) {
         res.status(Constants.HTTP_CREATED).json(response);
       }
@@ -73,22 +64,16 @@ router.post('/api/user',
   });
 
 /* PUT update existing user */
-router.put('/api/user/:id',
+router.put('/:id',
   validator.body(UpdateUserSchema),
   async (req, res) => {
     try {
       const userId = parseInt(req.params.id, 10);
-
       if (!isNaN(userId)) {
         const { login, password, age } = req.body;
-
         const user = await userService.getUserById(userId);
-
         if (user) {
           const response = await userService.updateUser(userId, { login, password, age });
-
-          console.log(JSON.stringify(response));
-
           if (response) {
             const updatedRows = response[1];
             res.status(Constants.HTTP_OK).json(updatedRows[0]);
@@ -107,18 +92,13 @@ router.put('/api/user/:id',
   });
 
 /* DELETE soft delete existing user */
-router.delete('/api/user/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const userId = parseInt(req.params.id, 10);
-
     if (!isNaN(userId)) {
       const user = await userService.getUserById(userId);
-
       if (user) {
         const response = await userService.deleteUser(userId);
-
-        console.log(JSON.stringify(response));
-
         if (response) {
           const updatedRows = response[1];
           res.status(Constants.HTTP_OK).json(updatedRows[0]);

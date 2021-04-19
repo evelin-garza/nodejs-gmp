@@ -35,11 +35,11 @@ This project connects to a database in queenie.db.elephantsql.com, to use your o
 
 - **GET user by id:**
 
-`http://localhost:3000/api/user/id`
+`http://localhost:3000/api/users/id`
 
 - **POST create user:**
 
-`http://localhost:3000/api/user`
+`http://localhost:3000/api/users`
 
 Body:
 ```
@@ -52,12 +52,11 @@ Body:
 
 - **PUT update user:**
 
-`http://localhost:3000/api/user`
+`http://localhost:3000/api/users/id`
 
 Body:
 ```
 {
-  "id": "id"
   "login": "update",
   "password": "p4ssw0rd",
   "age": 20
@@ -66,7 +65,7 @@ Body:
 
 - **DELETE soft delete user:**
 
-`http://localhost:3000/api/user/id`
+`http://localhost:3000/api/users/id`
 
 - **Run ESLint:**
 

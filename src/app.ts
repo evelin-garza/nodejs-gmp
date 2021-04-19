@@ -7,6 +7,6 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 
 // Routes
-app.use(UserRoutes);
+app.use('/api/users', UserRoutes);
 
 export { app };
