@@ -4,9 +4,20 @@ import { UserAttributes } from '../types/user';
 
 export const getUsers = (loginSubstring = '', order = 'asc', includeDeleted = false, limit?: number): Promise<any> => {
   const options: FindOptions = {
-    order: [['login', order]],
-    where: { isDeleted: includeDeleted, login: { [Op.like]: `%${loginSubstring}%` } }
+    order: [['login', order]]
   };
+
+  const where: any = {};
+
+  if (loginSubstring) {
+    where.login = { [Op.like]: `%${loginSubstring}%` };
+  }
+
+  if (!includeDeleted) {
+    where.isDeleted = false;
+  }
+
+  options.where = where;
 
   if (limit) {
     options.limit = limit;

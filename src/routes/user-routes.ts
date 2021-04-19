@@ -71,13 +71,18 @@ router.put('/api/user/:id',
     try {
       const userId = parseInt(req.params.id, 10);
       const { login, password, age } = req.body;
-      const response = await UserService.updateUser(userId, { login, password, age });
 
-      console.log(JSON.stringify(response));
+      const user = await UserService.getUserById(userId);
 
-      if (response && response[0] > 0) {
-        const updatedRows = response[1];
-        res.status(Constants.HTTP_OK).json(updatedRows[0]);
+      if (user) {
+        const response = await UserService.updateUser(userId, { login, password, age });
+
+        console.log(JSON.stringify(response));
+
+        if (response) {
+          const updatedRows = response[1];
+          res.status(Constants.HTTP_OK).json(updatedRows[0]);
+        }
       } else {
         const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No user found with id: ${userId}.`);
         errorHandler(error, res);
@@ -91,13 +96,17 @@ router.put('/api/user/:id',
 router.delete('/api/user/:id', async (req, res) => {
   try {
     const userId = parseInt(req.params.id, 10);
-    const response = await UserService.deleteUser(userId);
+    const user = await UserService.getUserById(userId);
 
-    console.log(JSON.stringify(response));
+    if (user) {
+      const response = await UserService.deleteUser(userId);
 
-    if (response && response[0] > 0) {
-      const updatedRows = response[1];
-      res.status(Constants.HTTP_OK).json(updatedRows[0]);
+      console.log(JSON.stringify(response));
+
+      if (response) {
+        const updatedRows = response[1];
+        res.status(Constants.HTTP_OK).json(updatedRows[0]);
+      }
     } else {
       const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No user found with id: ${userId}.`);
       errorHandler(error, res);

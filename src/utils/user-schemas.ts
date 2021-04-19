@@ -27,5 +27,5 @@ export const UsersQuerySchema = Joi.object({
   limit: Joi.number().integer().min(1),
   loginSubstring: Joi.string(),
   order: Joi.string().valid('asc', 'desc'),
-  includeDeleted: Joi.boolean()
+  includeDeleted: Joi.string().valid('true', 'false')
 });
