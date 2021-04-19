@@ -33,14 +33,20 @@ router.get('/api/users',
 router.get('/api/user/:id', async (req, res) => {
   try {
     const userId = parseInt(req.params.id, 10);
-    const response = await userService.getUserById(userId);
 
-    console.log(JSON.stringify(response));
+    if (!isNaN(userId)) {
+      const response = await userService.getUserById(userId);
 
-    if (response) {
-      res.status(Constants.HTTP_OK).json(response);
+      console.log(JSON.stringify(response));
+
+      if (response) {
+        res.status(Constants.HTTP_OK).json(response);
+      } else {
+        const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No user found with id: ${userId}.`);
+        errorHandler(error, res);
+      }
     } else {
-      const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No user found with id: ${userId}.`);
+      const error = createErrorMessage(Constants.HTTP_BAD_REQUEST, Constants.BAD_REQUEST_ERROR, 'Id must be an integer');
       errorHandler(error, res);
     }
   } catch (err) {
@@ -72,21 +78,27 @@ router.put('/api/user/:id',
   async (req, res) => {
     try {
       const userId = parseInt(req.params.id, 10);
-      const { login, password, age } = req.body;
 
-      const user = await userService.getUserById(userId);
+      if (!isNaN(userId)) {
+        const { login, password, age } = req.body;
 
-      if (user) {
-        const response = await userService.updateUser(userId, { login, password, age });
+        const user = await userService.getUserById(userId);
 
-        console.log(JSON.stringify(response));
+        if (user) {
+          const response = await userService.updateUser(userId, { login, password, age });
 
-        if (response) {
-          const updatedRows = response[1];
-          res.status(Constants.HTTP_OK).json(updatedRows[0]);
+          console.log(JSON.stringify(response));
+
+          if (response) {
+            const updatedRows = response[1];
+            res.status(Constants.HTTP_OK).json(updatedRows[0]);
+          }
+        } else {
+          const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No user found with id: ${userId}.`);
+          errorHandler(error, res);
         }
       } else {
-        const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No user found with id: ${userId}.`);
+        const error = createErrorMessage(Constants.HTTP_BAD_REQUEST, Constants.BAD_REQUEST_ERROR, 'Id must be an integer');
         errorHandler(error, res);
       }
     } catch (err) {
@@ -98,19 +110,25 @@ router.put('/api/user/:id',
 router.delete('/api/user/:id', async (req, res) => {
   try {
     const userId = parseInt(req.params.id, 10);
-    const user = await userService.getUserById(userId);
 
-    if (user) {
-      const response = await userService.deleteUser(userId);
+    if (!isNaN(userId)) {
+      const user = await userService.getUserById(userId);
 
-      console.log(JSON.stringify(response));
+      if (user) {
+        const response = await userService.deleteUser(userId);
 
-      if (response) {
-        const updatedRows = response[1];
-        res.status(Constants.HTTP_OK).json(updatedRows[0]);
+        console.log(JSON.stringify(response));
+
+        if (response) {
+          const updatedRows = response[1];
+          res.status(Constants.HTTP_OK).json(updatedRows[0]);
+        }
+      } else {
+        const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No user found with id: ${userId}.`);
+        errorHandler(error, res);
       }
     } else {
-      const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No user found with id: ${userId}.`);
+      const error = createErrorMessage(Constants.HTTP_BAD_REQUEST, Constants.BAD_REQUEST_ERROR, 'Id must be an integer');
       errorHandler(error, res);
     }
   } catch (err) {
