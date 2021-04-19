@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/app.ts",
+    "dev": "nodemon src/index.ts",
     "lint": "eslint . --ext .ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "task1": "nodemon --exec babel-node --presets=@babel/preset-env ./task1/task1.1/index.js",
@@ -23,6 +23,9 @@
     "express": "^4.17.1",
     "express-joi-validation": "^5.0.0",
     "joi": "^17.4.0",
+    "pg": "^8.6.0",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.6.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

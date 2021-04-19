@@ -1,42 +1,54 @@
-import * as UserController from '../controllers/user-controller';
-import { User } from '../models/user';
+import { FindOptions, Op } from 'sequelize';
+import { User as UserModel } from '../models/user.model';
+import { UserAttributes } from '../types/user';
 
-type UserQuery = {
-  loginSubstring?: string,
-  limit?: string,
-  order?: string
-};
+export const getUsers = (loginSubstring = '', order = 'asc', includeDeleted = false, limit?: number): Promise<any> => {
+  const options: FindOptions = {
+    order: [['login', order]],
+    where: { isDeleted: includeDeleted, login: { [Op.like]: `%${loginSubstring}%` } }
+  };
 
-type UserBody = {
-  login: string;
-  password: string;
-  age: number;
-};
+  if (limit) {
+    options.limit = limit;
+  }
 
-export const getUsers = (query: UserQuery): Promise<User[]> => {
-  const { loginSubstring, limit, order } = query;
   console.log('Get user list');
-  return UserController.getAllUsers(loginSubstring, order, limit);
+  return UserModel.findAll(options);
 };
 
-export const getUserById = (userId: string): Promise<User> => {
+export const getUserById = (userId: number): Promise<any> => {
   console.log(`Get user by id: ${userId}`);
-  return UserController.getUserById(userId);
+  return UserModel.findOne({
+    where: {
+      isDeleted: false,
+      id: userId
+    }
+  });
 };
 
-export const createUser = (body: UserBody): Promise<User> => {
-  const { login, password, age } = body;
+export const createUser = async (user: UserAttributes): Promise<any> => {
   console.log('Create user');
-  return UserController.createUser(login, password, age);
+  return UserModel.create(user);
 };
 
-export const updateUser = (body: User): Promise<User> => {
-  const { id, login, password, age } = body;
+export const updateUser = (userId: number, user: UserAttributes): Promise<any> => {
   console.log('Update user');
-  return UserController.updateUser(id, login, password, age);
+  return UserModel.update(user, {
+    where: {
+      isDeleted: false,
+      id: userId
+    },
+    returning: true
+  });
 };
 
-export const deleteUser = (userId: string): Promise<string> => {
+export const deleteUser = (userId: number): Promise<any> => {
   console.log(`Delete user with id: ${userId}`);
-  return UserController.deleteUser(userId);
+  return UserModel.update({ isDeleted: true }, {
+    where: {
+      isDeleted: false,
+      id: userId
+    },
+    returning: true
+  });
 };

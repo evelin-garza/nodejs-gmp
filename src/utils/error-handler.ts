@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { CustomError } from '../models/error';
+import { CustomError } from '../types/error';
 import { Constants } from './constants';
 
 export const createErrorMessage = (
