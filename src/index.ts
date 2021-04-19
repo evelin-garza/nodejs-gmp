@@ -8,7 +8,7 @@ const startServer = async () => {
   try {
     await db.sync({ force: true });
 
-    console.log('Database connection successfully');
+    console.log('Database connection successfully!!');
 
     app.listen(port, () => {
       console.log(`Server is running at http://localhost:${port}`);
