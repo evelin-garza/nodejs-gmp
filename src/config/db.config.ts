@@ -1,6 +1,6 @@
 export default {
-  host: 'localhost',
-  username: 'admin',
-  password: 'admin',
-  db: 'nodedb'
+  host: 'queenie.db.elephantsql.com',
+  username: 'pjrasmcx',
+  password: '5mOsRuv0RqXIxnsG8bSG9dBSLZc_X7Ms',
+  db: 'pjrasmcx'
 };

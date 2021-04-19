@@ -1,0 +1,9 @@
+INSERT INTO users
+  (login, password, age)
+values('Katrina', '8s1P0Gb8UaRWoaK', 10);
+INSERT INTO users
+  (login, password, age)
+values('Clark', 'ZUrXgVwKPHEoy9Z', 58);
+INSERT INTO users
+  (login, password, age)
+values('Carolina', '7JDUKYYAZq6bRyY', 25);
