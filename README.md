@@ -14,6 +14,7 @@
 > The server will start running at `http://localhost:3000`
 
 **Database setup**
+
 This project connects to a database in queenie.db.elephantsql.com, to use your own db configuration, update values in [db.config.ts](https://github.com/evelin-garza/nodejs-gmp/blob/task3-postgresql-and-layered-architecture/src/config/db.config.ts)
 
 > Users table is populated with some test data, you can go to http://localhost:3000/api/users to check it.
