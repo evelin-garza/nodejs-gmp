@@ -2,12 +2,20 @@
 import { app } from './app';
 import { db } from './models';
 import fs from 'fs';
+import { Group } from './models/group.model';
+import { User } from './models/user.model';
 
 const port = 3000;
 const script = fs.readFileSync('src/data/data-script.sql', 'utf8');
 
+const addAssociations = (): void => {
+  Group.belongsToMany(User, { through: 'user_group' });
+  User.belongsToMany(Group, { through: 'user_group' });
+};
+
 const startServer = async () => {
   try {
+    addAssociations();
     await db.sync({ force: true });
     await db.query(script);
 
