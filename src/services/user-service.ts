@@ -1,8 +1,22 @@
 import { FindOptions, Op } from 'sequelize';
+import { db } from '../models';
 import { UserAttributes, UserInstance, UserModel } from '../types/user';
+import GroupService from '../services/group-service';
+import { Group } from '../models/group.model';
 
 export default class UserService {
   private userModel: UserInstance;
+  private groupService = new GroupService(Group);
+  includeGroups = [
+    {
+      model: Group,
+      as: 'groups',
+      attributes: ['id', 'name'],
+      through: {
+        attributes: []
+      }
+    }
+  ];
 
   constructor(userModel: UserInstance) {
     this.userModel = userModel;
@@ -29,6 +43,8 @@ export default class UserService {
       options.limit = limit;
     }
 
+    options.include = this.includeGroups;
+
     console.log('Get user list');
     return this.userModel.findAll(options);
   }
@@ -39,7 +55,8 @@ export default class UserService {
       where: {
         isDeleted: false,
         id: userId
-      }
+      },
+      include: this.includeGroups
     });
   }
 
@@ -67,6 +84,20 @@ export default class UserService {
         id: userId
       },
       returning: true
+    });
+  }
+
+  async addUsersToGroup(groupId: string, userIds: number[]): Promise<any> {
+    const users = await Promise.all(userIds.map(async (userId: number) => {
+      return await this.getUserById(userId);
+    }));
+
+    const group = await this.groupService.getGroupById(groupId);
+
+    return db.transaction(async (t) => {
+      return await Promise.all(users.map(async (user: any) => {
+        return await user.addGroup(group, { transaction: t });
+      }));
     });
   }
 }

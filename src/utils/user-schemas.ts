@@ -29,3 +29,8 @@ export const UsersQuerySchema = Joi.object({
   order: Joi.string().valid('asc', 'desc'),
   includeDeleted: Joi.string().valid('true', 'false')
 });
+
+export const AddUsersToGroupSchema = Joi.object({
+  groupId: Joi.string().required(),
+  userIds: Joi.array().items(Joi.number()).unique().required()
+});

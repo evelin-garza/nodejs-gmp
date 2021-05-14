@@ -1,6 +1,6 @@
 import express from 'express';
 import { createValidator } from 'express-joi-validation';
-import { CreateUserSchema, UpdateUserSchema, UsersQuerySchema } from '../utils/user-schemas';
+import { CreateUserSchema, UpdateUserSchema, UsersQuerySchema, AddUsersToGroupSchema } from '../utils/user-schemas';
 import { createErrorMessage, errorHandler } from '../utils/error-handler';
 import { Constants } from '../utils/constants';
 import UserService from '../services/user-service';
@@ -115,5 +115,18 @@ router.delete('/:id', async (req, res) => {
     errorHandler(err, res);
   }
 });
+
+/* Add users to group */
+router.post('/addToGroup',
+  validator.body(AddUsersToGroupSchema),
+  async (req, res) => {
+    try {
+      const { groupId, userIds } = req.body;
+      const response = await userService.addUsersToGroup(groupId, userIds);
+      res.status(201).send(response);
+    } catch (err) {
+      errorHandler(err, res);
+    }
+  });
 
 export { router as UserRoutes };
