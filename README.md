@@ -1,6 +1,6 @@
 # NodeJS Global Mentoring Program
 
-## PostgreSQL and layered architecture
+## Second entity and many-to-many relationships
 
 **Getting Started**
 
@@ -63,9 +63,57 @@ Body:
 }
 ```
 
+- **GET Add Users To Group:**
+
+`http://localhost:3000/api/users/addToGroup`
+
+Body:
+```
+{
+  "groupId": "efa817b8-f6e3-48a3-bc5a-1458eec13885",
+  "userIds": [1,2,3]
+}
+```
+
 - **DELETE soft delete user:**
 
 `http://localhost:3000/api/users/id`
+
+- **GET groups:**
+
+`http://localhost:3000/api/groups`
+
+- **GET group by id:**
+
+`http://localhost:3000/api/groups/id`
+
+- **POST create group:**
+
+`hhttp://localhost:3000/api/groups`
+
+Body:
+```
+{
+  "name": "Superadmin",
+  "permissions": ["READ", "WRITE", "DELETE", "SHARE", "UPLOAD_FILES"]
+}
+```
+
+- **PUT update group:**
+
+`http://localhost:3000/api/groups/id`
+
+Body:
+```
+{
+  "name": "User",
+  "permissions": ["READ"]
+}
+```
+
+- **DELETE group:**
+
+`http://localhost:3000/api/groups/id`
 
 - **Run ESLint:**
 
