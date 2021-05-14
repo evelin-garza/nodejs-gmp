@@ -89,7 +89,7 @@ Body:
 
 - **POST create group:**
 
-`hhttp://localhost:3000/api/groups`
+`http://localhost:3000/api/groups`
 
 Body:
 ```
