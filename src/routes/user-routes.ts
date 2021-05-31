@@ -25,7 +25,7 @@ router.get('/',
 
       res.status(Constants.HTTP_OK).json(response);
     } catch (err) {
-      errorHandler(err, res);
+      errorHandler(err, res, req);
     }
   });
 
@@ -41,14 +41,14 @@ router.get('/:id',
           res.status(Constants.HTTP_OK).json(response);
         } else {
           const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No user found with id: ${userId}.`);
-          errorHandler(error, res);
+          errorHandler(error, res, req);
         }
       } else {
         const error = createErrorMessage(Constants.HTTP_BAD_REQUEST, Constants.BAD_REQUEST_ERROR, 'Id must be an integer');
-        errorHandler(error, res);
+        errorHandler(error, res, req);
       }
     } catch (err) {
-      errorHandler(err, res);
+      errorHandler(err, res, req);
     }
   });
 
@@ -64,7 +64,7 @@ router.post('/',
         res.status(Constants.HTTP_CREATED).json(response);
       }
     } catch (err) {
-      errorHandler(err, res);
+      errorHandler(err, res, req);
     }
   });
 
@@ -86,14 +86,14 @@ router.put('/:id',
           }
         } else {
           const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No user found with id: ${userId}.`);
-          errorHandler(error, res);
+          errorHandler(error, res, req);
         }
       } else {
         const error = createErrorMessage(Constants.HTTP_BAD_REQUEST, Constants.BAD_REQUEST_ERROR, 'Id must be an integer');
-        errorHandler(error, res);
+        errorHandler(error, res, req);
       }
     } catch (err) {
-      errorHandler(err, res);
+      errorHandler(err, res, req);
     }
   });
 
@@ -113,14 +113,14 @@ router.delete('/:id',
           }
         } else {
           const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No user found with id: ${userId}.`);
-          errorHandler(error, res);
+          errorHandler(error, res, req);
         }
       } else {
         const error = createErrorMessage(Constants.HTTP_BAD_REQUEST, Constants.BAD_REQUEST_ERROR, 'Id must be an integer');
-        errorHandler(error, res);
+        errorHandler(error, res, req);
       }
     } catch (err) {
-      errorHandler(err, res);
+      errorHandler(err, res, req);
     }
   });
 
@@ -134,7 +134,7 @@ router.post('/addToGroup',
       const response = await userService.addUsersToGroup(groupId, userIds);
       res.status(201).send(response);
     } catch (err) {
-      errorHandler(err, res);
+      errorHandler(err, res, req);
     }
   });
 

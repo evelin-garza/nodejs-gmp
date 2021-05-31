@@ -21,7 +21,7 @@ router.get('/',
       res.status(Constants.HTTP_OK).json(response);
     } catch (err) {
       console.log(err);
-      errorHandler(err, res);
+      errorHandler(err, res, req);
     }
   });
 
@@ -36,10 +36,10 @@ router.get('/:id',
         res.status(Constants.HTTP_OK).json(response);
       } else {
         const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No group found with id: ${groupId}.`);
-        errorHandler(error, res);
+        errorHandler(error, res, req);
       }
     } catch (err) {
-      errorHandler(err, res);
+      errorHandler(err, res, req);
     }
   });
 
@@ -55,7 +55,7 @@ router.post('/',
         res.status(Constants.HTTP_CREATED).json(response);
       }
     } catch (err) {
-      errorHandler(err, res);
+      errorHandler(err, res, req);
     }
   });
 
@@ -76,10 +76,10 @@ router.put('/:id',
         }
       } else {
         const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No group found with id: ${groupId}.`);
-        errorHandler(error, res);
+        errorHandler(error, res, req);
       }
     } catch (err) {
-      errorHandler(err, res);
+      errorHandler(err, res, req);
     }
   });
 
@@ -97,10 +97,10 @@ router.delete('/:id',
         }
       } else {
         const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No group found with id: ${groupId}.`);
-        errorHandler(error, res);
+        errorHandler(error, res, req);
       }
     } catch (err) {
-      errorHandler(err, res);
+      errorHandler(err, res, req);
     }
   });
 

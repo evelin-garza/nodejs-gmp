@@ -1,6 +1,7 @@
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { CustomError } from '../types/error';
 import { Constants } from './constants';
+import { logger } from '../services/logger-service';
 
 export const createErrorMessage = (
   status: number,
@@ -16,7 +17,9 @@ export const createErrorMessage = (
   };
 };
 
-export const errorHandler = (err: CustomError, res: Response): void => {
+export const errorHandler = (err: CustomError, res: Response, req: Request): void => {
+  logError(err.message || Constants.INTERNAL_SERVER_ERROR, req);
+
   if (err.status) {
     res.status(err.status).json(err);
   } else {
@@ -25,4 +28,18 @@ export const errorHandler = (err: CustomError, res: Response): void => {
       error: Constants.INTERNAL_SERVER_ERROR
     });
   }
+};
+
+const logError = (errorMessage: string, req: Request) => {
+  const { params, query, body } = req;
+
+  logger.error(JSON.stringify({
+    method: req.method,
+    arguments: {
+      params,
+      query,
+      body
+    },
+    error: errorMessage
+  }));
 };

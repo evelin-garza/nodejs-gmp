@@ -4,6 +4,7 @@ import { db } from './models';
 import fs from 'fs';
 import { Group } from './models/group.model';
 import { User } from './models/user.model';
+import { logger } from './services/logger-service';
 
 const port = 3000;
 const script = fs.readFileSync('src/data/data-script.sql', 'utf8');
@@ -23,6 +24,14 @@ const startServer = async () => {
 
     app.listen(port, () => {
       console.log(`Server is running at http://localhost:${port}`);
+    });
+
+    process.on('uncaughtException', error => {
+      logger.error(error);
+    });
+
+    process.on('unhandledRejection', error => {
+      logger.error(error);
     });
   } catch (e) {
     console.error('Unable to connect to database.');
