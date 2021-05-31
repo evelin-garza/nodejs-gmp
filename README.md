@@ -1,6 +1,6 @@
 # NodeJS Global Mentoring Program
 
-## Second entity and many-to-many relationships
+## Logging and error handling
 
 **Getting Started**
 
