@@ -5,6 +5,7 @@ import GroupService from '../services/group-service';
 import { Group } from '../models/group.model';
 import { CreateGroupSchema, UpdateGroupSchema } from '../utils/group-schemas';
 import { createValidator } from 'express-joi-validation';
+import { LoggerMiddleware } from '../middlewares/logger-middleware';
 
 const router = express.Router();
 const validator = createValidator();
@@ -12,6 +13,7 @@ const groupService = new GroupService(Group);
 
 /* GET groups list */
 router.get('/',
+  LoggerMiddleware,
   async (req, res) => {
     try {
       const response = await groupService.getGroups();
@@ -24,23 +26,26 @@ router.get('/',
   });
 
 /* GET group by ID */
-router.get('/:id', async (req, res) => {
-  try {
-    const groupId = req.params.id;
-    const response = await groupService.getGroupById(groupId);
-    if (response) {
-      res.status(Constants.HTTP_OK).json(response);
-    } else {
-      const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No group found with id: ${groupId}.`);
-      errorHandler(error, res);
+router.get('/:id',
+  LoggerMiddleware,
+  async (req, res) => {
+    try {
+      const groupId = req.params.id;
+      const response = await groupService.getGroupById(groupId);
+      if (response) {
+        res.status(Constants.HTTP_OK).json(response);
+      } else {
+        const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No group found with id: ${groupId}.`);
+        errorHandler(error, res);
+      }
+    } catch (err) {
+      errorHandler(err, res);
     }
-  } catch (err) {
-    errorHandler(err, res);
-  }
-});
+  });
 
 /* POST create new group */
 router.post('/',
+  LoggerMiddleware,
   validator.body(CreateGroupSchema),
   async (req, res) => {
     try {
@@ -56,6 +61,7 @@ router.post('/',
 
 // /* PUT update existing group */
 router.put('/:id',
+  LoggerMiddleware,
   validator.body(UpdateGroupSchema),
   async (req, res) => {
     try {
@@ -78,22 +84,24 @@ router.put('/:id',
   });
 
 // /* DELETE existing group */
-router.delete('/:id', async (req, res) => {
-  try {
-    const groupId = req.params.id;
-    const group = await groupService.getGroupById(groupId);
-    if (group) {
-      const response = await groupService.deleteGroup(groupId);
-      if (response) {
-        res.status(Constants.HTTP_OK).json('Group deleted successfully.');
+router.delete('/:id',
+  LoggerMiddleware,
+  async (req, res) => {
+    try {
+      const groupId = req.params.id;
+      const group = await groupService.getGroupById(groupId);
+      if (group) {
+        const response = await groupService.deleteGroup(groupId);
+        if (response) {
+          res.status(Constants.HTTP_OK).json('Group deleted successfully.');
+        }
+      } else {
+        const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No group found with id: ${groupId}.`);
+        errorHandler(error, res);
       }
-    } else {
-      const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No group found with id: ${groupId}.`);
-      errorHandler(error, res);
+    } catch (err) {
+      errorHandler(err, res);
     }
-  } catch (err) {
-    errorHandler(err, res);
-  }
-});
+  });
 
 export { router as GroupRoutes };

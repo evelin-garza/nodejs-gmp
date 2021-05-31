@@ -5,6 +5,7 @@ import { createErrorMessage, errorHandler } from '../utils/error-handler';
 import { Constants } from '../utils/constants';
 import UserService from '../services/user-service';
 import { User } from '../models/user.model';
+import { LoggerMiddleware } from '../middlewares/logger-middleware';
 
 const router = express.Router();
 const validator = createValidator();
@@ -12,6 +13,7 @@ const userService = new UserService(User);
 
 /* GET users list */
 router.get('/',
+  LoggerMiddleware,
   validator.query(UsersQuerySchema),
   async (req, res) => {
     try {
@@ -28,28 +30,31 @@ router.get('/',
   });
 
 /* GET user by ID */
-router.get('/:id', async (req, res) => {
-  try {
-    const userId = parseInt(req.params.id, 10);
-    if (!isNaN(userId)) {
-      const response = await userService.getUserById(userId);
-      if (response) {
-        res.status(Constants.HTTP_OK).json(response);
+router.get('/:id',
+  LoggerMiddleware,
+  async (req, res) => {
+    try {
+      const userId = parseInt(req.params.id, 10);
+      if (!isNaN(userId)) {
+        const response = await userService.getUserById(userId);
+        if (response) {
+          res.status(Constants.HTTP_OK).json(response);
+        } else {
+          const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No user found with id: ${userId}.`);
+          errorHandler(error, res);
+        }
       } else {
-        const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No user found with id: ${userId}.`);
+        const error = createErrorMessage(Constants.HTTP_BAD_REQUEST, Constants.BAD_REQUEST_ERROR, 'Id must be an integer');
         errorHandler(error, res);
       }
-    } else {
-      const error = createErrorMessage(Constants.HTTP_BAD_REQUEST, Constants.BAD_REQUEST_ERROR, 'Id must be an integer');
-      errorHandler(error, res);
+    } catch (err) {
+      errorHandler(err, res);
     }
-  } catch (err) {
-    errorHandler(err, res);
-  }
-});
+  });
 
 /* POST create new user */
 router.post('/',
+  LoggerMiddleware,
   validator.body(CreateUserSchema),
   async (req, res) => {
     try {
@@ -65,6 +70,7 @@ router.post('/',
 
 /* PUT update existing user */
 router.put('/:id',
+  LoggerMiddleware,
   validator.body(UpdateUserSchema),
   async (req, res) => {
     try {
@@ -92,32 +98,35 @@ router.put('/:id',
   });
 
 /* DELETE soft delete existing user */
-router.delete('/:id', async (req, res) => {
-  try {
-    const userId = parseInt(req.params.id, 10);
-    if (!isNaN(userId)) {
-      const user = await userService.getUserById(userId);
-      if (user) {
-        const response = await userService.deleteUser(userId);
-        if (response) {
-          const updatedRows = response[1];
-          res.status(Constants.HTTP_OK).json(updatedRows[0]);
+router.delete('/:id',
+  LoggerMiddleware,
+  async (req, res) => {
+    try {
+      const userId = parseInt(req.params.id, 10);
+      if (!isNaN(userId)) {
+        const user = await userService.getUserById(userId);
+        if (user) {
+          const response = await userService.deleteUser(userId);
+          if (response) {
+            const updatedRows = response[1];
+            res.status(Constants.HTTP_OK).json(updatedRows[0]);
+          }
+        } else {
+          const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No user found with id: ${userId}.`);
+          errorHandler(error, res);
         }
       } else {
-        const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No user found with id: ${userId}.`);
+        const error = createErrorMessage(Constants.HTTP_BAD_REQUEST, Constants.BAD_REQUEST_ERROR, 'Id must be an integer');
         errorHandler(error, res);
       }
-    } else {
-      const error = createErrorMessage(Constants.HTTP_BAD_REQUEST, Constants.BAD_REQUEST_ERROR, 'Id must be an integer');
-      errorHandler(error, res);
+    } catch (err) {
+      errorHandler(err, res);
     }
-  } catch (err) {
-    errorHandler(err, res);
-  }
-});
+  });
 
 /* Add users to group */
 router.post('/addToGroup',
+  LoggerMiddleware,
   validator.body(AddUsersToGroupSchema),
   async (req, res) => {
     try {

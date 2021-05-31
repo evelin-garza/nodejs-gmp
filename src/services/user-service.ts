@@ -45,12 +45,10 @@ export default class UserService {
 
     options.include = this.includeGroups;
 
-    console.log('Get user list');
     return this.userModel.findAll(options);
   }
 
   getUserById(userId: number): Promise<UserModel | null> {
-    console.log(`Get user by id: ${userId}`);
     return this.userModel.findOne({
       where: {
         isDeleted: false,
@@ -61,12 +59,10 @@ export default class UserService {
   }
 
   createUser(user: UserAttributes): Promise<UserModel | null> {
-    console.log('Create user');
     return this.userModel.create(user);
   }
 
   updateUser(userId: number, user: UserAttributes): Promise<[number, UserModel[]] | null> {
-    console.log('Update user');
     return this.userModel.update(user, {
       where: {
         isDeleted: false,
@@ -77,7 +73,6 @@ export default class UserService {
   }
 
   deleteUser(userId: number): Promise<[number, UserModel[]] | null> {
-    console.log(`Delete user with id: ${userId}`);
     return this.userModel.update({ isDeleted: true }, {
       where: {
         isDeleted: false,
