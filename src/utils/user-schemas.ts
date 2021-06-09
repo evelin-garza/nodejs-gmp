@@ -34,3 +34,8 @@ export const AddUsersToGroupSchema = Joi.object({
   groupId: Joi.string().required(),
   userIds: Joi.array().items(Joi.number()).unique().required()
 });
+
+export const LoginSchema = Joi.object({
+  login: Joi.string().required(),
+  password: Joi.string().required()
+});
