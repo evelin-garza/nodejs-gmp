@@ -1,6 +1,6 @@
 # NodeJS Global Mentoring Program
 
-## Logging and error handling
+## JWT authorization and CORS
 
 **Getting Started**
 
@@ -20,6 +20,26 @@ This project connects to a database in queenie.db.elephantsql.com, to use your o
 > Users table is populated with some test data, you can go to http://localhost:3000/api/users to check it.
 
 **API**
+
+- **POST login:**
+
+`http://localhost:3000/api/auth/login`
+
+Body:
+```
+{
+  "login": "value",
+  "password": "p4ssw0rd"
+}
+```
+
+- **NOTE:** the following endpoints require authorization token
+Headers:
+```
+{
+  "Authorization": "Bearer accessToken"
+}
+```
 
 - **GET users:**
 
