@@ -6,6 +6,7 @@ import { Constants } from '../utils/constants';
 import UserService from '../services/user-service';
 import { User } from '../models/user.model';
 import { LoggerMiddleware } from '../middlewares/logger-middleware';
+import { isAuthenticated } from '../middlewares/auth-middleware';
 
 const router = express.Router();
 const validator = createValidator();
@@ -14,6 +15,7 @@ const userService = new UserService(User);
 /* GET users list */
 router.get('/',
   LoggerMiddleware,
+  isAuthenticated,
   validator.query(UsersQuerySchema),
   async (req, res) => {
     try {
@@ -32,6 +34,7 @@ router.get('/',
 /* GET user by ID */
 router.get('/:id',
   LoggerMiddleware,
+  isAuthenticated,
   async (req, res) => {
     try {
       const userId = parseInt(req.params.id, 10);
@@ -55,6 +58,7 @@ router.get('/:id',
 /* POST create new user */
 router.post('/',
   LoggerMiddleware,
+  isAuthenticated,
   validator.body(CreateUserSchema),
   async (req, res) => {
     try {
@@ -71,6 +75,7 @@ router.post('/',
 /* PUT update existing user */
 router.put('/:id',
   LoggerMiddleware,
+  isAuthenticated,
   validator.body(UpdateUserSchema),
   async (req, res) => {
     try {
@@ -100,6 +105,7 @@ router.put('/:id',
 /* DELETE soft delete existing user */
 router.delete('/:id',
   LoggerMiddleware,
+  isAuthenticated,
   async (req, res) => {
     try {
       const userId = parseInt(req.params.id, 10);
@@ -127,6 +133,7 @@ router.delete('/:id',
 /* Add users to group */
 router.post('/addToGroup',
   LoggerMiddleware,
+  isAuthenticated,
   validator.body(AddUsersToGroupSchema),
   async (req, res) => {
     try {

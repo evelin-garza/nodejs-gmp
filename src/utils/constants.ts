@@ -5,10 +5,12 @@ export class Constants {
   static HTTP_UNAUTHORIZED = 401;
   static HTTP_NOT_FOUND = 404;
   static HTTP_INTERNAL_SERVER_ERROR = 500;
+  static HTTP_FORBIDDEN = 403;
 
 
   static BAD_REQUEST_ERROR = 'Bad Request';
   static UNAUTHORIZED_ERROR = 'Unauthorized';
   static NOT_FOUND_ERROR = 'Not Found';
   static INTERNAL_SERVER_ERROR = 'Internal Server Error';
+  static FORBIDDEN_ERROR = 'Forbidden';
 }

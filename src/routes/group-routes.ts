@@ -6,6 +6,7 @@ import { Group } from '../models/group.model';
 import { CreateGroupSchema, UpdateGroupSchema } from '../utils/group-schemas';
 import { createValidator } from 'express-joi-validation';
 import { LoggerMiddleware } from '../middlewares/logger-middleware';
+import { isAuthenticated } from '../middlewares/auth-middleware';
 
 const router = express.Router();
 const validator = createValidator();
@@ -14,6 +15,7 @@ const groupService = new GroupService(Group);
 /* GET groups list */
 router.get('/',
   LoggerMiddleware,
+  isAuthenticated,
   async (req, res) => {
     try {
       const response = await groupService.getGroups();
@@ -28,6 +30,7 @@ router.get('/',
 /* GET group by ID */
 router.get('/:id',
   LoggerMiddleware,
+  isAuthenticated,
   async (req, res) => {
     try {
       const groupId = req.params.id;
@@ -46,6 +49,7 @@ router.get('/:id',
 /* POST create new group */
 router.post('/',
   LoggerMiddleware,
+  isAuthenticated,
   validator.body(CreateGroupSchema),
   async (req, res) => {
     try {
@@ -62,6 +66,7 @@ router.post('/',
 // /* PUT update existing group */
 router.put('/:id',
   LoggerMiddleware,
+  isAuthenticated,
   validator.body(UpdateGroupSchema),
   async (req, res) => {
     try {
@@ -86,6 +91,7 @@ router.put('/:id',
 // /* DELETE existing group */
 router.delete('/:id',
   LoggerMiddleware,
+  isAuthenticated,
   async (req, res) => {
     try {
       const groupId = req.params.id;
