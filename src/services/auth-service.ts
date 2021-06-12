@@ -7,7 +7,7 @@ export default class AuthService {
     this.userModel = userModel;
   }
 
-  findUser(login: string, password: string): Promise<UserModel | null> {
+  findUser(login: string, password: string): Promise<Partial<UserModel> | null> {
     return this.userModel.findOne({ where: { login, password } });
   }
 }

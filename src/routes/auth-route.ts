@@ -26,6 +26,7 @@ router.post('/login',
       return res.status(Constants.HTTP_BAD_REQUEST).send('The provided credentials are not valid.');
     } catch (e) {
       console.log(e);
+      res.status(Constants.HTTP_INTERNAL_SERVER_ERROR).send(Constants.INTERNAL_SERVER_ERROR);
     }
   });
 
