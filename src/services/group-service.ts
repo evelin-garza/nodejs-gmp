@@ -18,19 +18,19 @@ export default class GroupService {
     this.groupModel = groupModel;
   }
 
-  getGroups(): Promise<GroupModel[]> {
+  getGroups(): Promise<Partial<GroupModel>[]> {
     return this.groupModel.findAll({ include: this.includeUsers });
   }
 
-  getGroupById(groupId: string): Promise<GroupModel | null> {
+  getGroupById(groupId: string): Promise<Partial<GroupModel> | null> {
     return this.groupModel.findByPk(groupId, { include: this.includeUsers });
   }
 
-  createGroup(group: GroupAttributes): Promise<GroupModel | null> {
+  createGroup(group: GroupAttributes): Promise<Partial<GroupModel> | null> {
     return this.groupModel.create(group);
   }
 
-  updateGroup(groupId: string, group: GroupAttributes): Promise<[number, GroupModel[]] | null> {
+  updateGroup(groupId: string, group: GroupAttributes): Promise<[number, Partial<GroupModel>[]] | null> {
     return this.groupModel.update(group, {
       where: {
         id: groupId

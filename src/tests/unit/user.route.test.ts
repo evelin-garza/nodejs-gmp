@@ -4,7 +4,6 @@ import sinon from 'sinon';
 import UserService from '../../services/user-service';
 import { app } from '../../app';
 
-
 const mockAccessToken = jwt.sign({ login: 'login' }, 's3cr3t');
 const mockUsers = [{
   id: 1,
@@ -100,7 +99,7 @@ describe('User Routes', () => {
     });
 
     it('should return 500 when there is an error', async () => {
-      sinon.stub(UserService.prototype, 'getUsers').rejects('Error');
+      sinon.stub(UserService.prototype, 'getUserById').rejects('Error');
 
       await request(app)
         .get('/api/users/1')
