@@ -22,7 +22,7 @@ export default class UserService {
     this.userModel = userModel;
   }
 
-  getUsers(loginSubstring = '', order = 'asc', includeDeleted = false, limit?: number): Promise<UserModel[]> {
+  getUsers(loginSubstring = '', order = 'asc', includeDeleted = false, limit?: number): Promise<Partial<UserModel>[]> {
     const options: FindOptions = {
       order: [['login', order]]
     };
@@ -48,7 +48,7 @@ export default class UserService {
     return this.userModel.findAll(options);
   }
 
-  getUserById(userId: number): Promise<UserModel | null> {
+  getUserById(userId: number): Promise<Partial<UserModel> | null> {
     return this.userModel.findOne({
       where: {
         isDeleted: false,
@@ -58,11 +58,11 @@ export default class UserService {
     });
   }
 
-  createUser(user: UserAttributes): Promise<UserModel | null> {
+  createUser(user: UserAttributes): Promise<Partial<UserModel> | null> {
     return this.userModel.create(user);
   }
 
-  updateUser(userId: number, user: UserAttributes): Promise<[number, UserModel[]] | null> {
+  updateUser(userId: number, user: UserAttributes): Promise<[number, Partial<UserModel>[]] | null> {
     return this.userModel.update(user, {
       where: {
         isDeleted: false,
@@ -72,7 +72,7 @@ export default class UserService {
     });
   }
 
-  deleteUser(userId: number): Promise<[number, UserModel[]] | null> {
+  deleteUser(userId: number): Promise<[number, Partial<UserModel>[]] | null> {
     return this.userModel.update({ isDeleted: true }, {
       where: {
         isDeleted: false,
