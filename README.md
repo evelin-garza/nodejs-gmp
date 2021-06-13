@@ -139,7 +139,7 @@ Body:
 
 `npm run lint`
 
-**API**
+**UNIT TESTS**
 
 - **Run tests:**
 
