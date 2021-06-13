@@ -1,6 +1,6 @@
 # NodeJS Global Mentoring Program
 
-## JWT authorization and CORS
+## Unit tests and config
 
 **Getting Started**
 
@@ -138,3 +138,13 @@ Body:
 - **Run ESLint:**
 
 `npm run lint`
+
+**API**
+
+- **Run tests:**
+
+`npm run test`
+
+- **Run tests with coverage:**
+
+`npm run coverage`

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon src/index.ts",
     "lint": "eslint . --ext .ts",
-    "test": "jest --coverage",
+    "test": "jest",
+    "cover": "jest --coverage",
     "task1": "nodemon --exec babel-node --presets=@babel/preset-env ./task1/task1.1/index.js",
     "task2": "nodemon --exec babel-node --presets=@babel/preset-env ./task1/task1.2/index.js",
     "task2-lbl": "nodemon --exec babel-node --presets=@babel/preset-env ./task1/task1.2/pipeline-method.js"
