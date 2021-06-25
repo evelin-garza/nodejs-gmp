@@ -5,7 +5,6 @@ import { createErrorMessage, errorHandler } from '../utils/error-handler';
 import { Constants } from '../utils/constants';
 import UserService from '../services/user-service';
 import { User } from '../models/user.model';
-import { LoggerMiddleware } from '../middlewares/logger-middleware';
 import { isAuthenticated } from '../middlewares/auth-middleware';
 
 const router = express.Router();
@@ -14,7 +13,6 @@ const userService = new UserService(User);
 
 /* GET users list */
 router.get('/',
-  LoggerMiddleware,
   isAuthenticated,
   validator.query(UsersQuerySchema),
   async (req, res) => {
@@ -33,31 +31,28 @@ router.get('/',
 
 /* GET user by ID */
 router.get('/:id',
-  LoggerMiddleware,
   isAuthenticated,
   async (req, res) => {
+    const userId = parseInt(req.params.id, 10);
+    if (isNaN(userId)) {
+      const error = createErrorMessage(Constants.HTTP_BAD_REQUEST, Constants.BAD_REQUEST_ERROR, 'Id must be an integer');
+      errorHandler(error, res, req);
+    }
+    let user;
     try {
-      const userId = parseInt(req.params.id, 10);
-      if (!isNaN(userId)) {
-        const response = await userService.getUserById(userId);
-        if (response) {
-          res.status(Constants.HTTP_OK).json(response);
-        } else {
-          const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No user found with id: ${userId}.`);
-          errorHandler(error, res, req);
-        }
-      } else {
-        const error = createErrorMessage(Constants.HTTP_BAD_REQUEST, Constants.BAD_REQUEST_ERROR, 'Id must be an integer');
-        errorHandler(error, res, req);
-      }
+      user = await userService.getUserById(userId);
     } catch (err) {
       errorHandler(err, res, req);
     }
+    if (!user) {
+      const error = createErrorMessage(Constants.HTTP_NOT_FOUND, Constants.NOT_FOUND_ERROR, `No user found with id: ${userId}.`);
+      errorHandler(error, res, req);
+    }
+    res.status(Constants.HTTP_OK).json(user);
   });
 
 /* POST create new user */
 router.post('/',
-  LoggerMiddleware,
   isAuthenticated,
   validator.body(CreateUserSchema),
   async (req, res) => {
@@ -74,7 +69,6 @@ router.post('/',
 
 /* PUT update existing user */
 router.put('/:id',
-  LoggerMiddleware,
   isAuthenticated,
   validator.body(UpdateUserSchema),
   async (req, res) => {
@@ -104,7 +98,6 @@ router.put('/:id',
 
 /* DELETE soft delete existing user */
 router.delete('/:id',
-  LoggerMiddleware,
   isAuthenticated,
   async (req, res) => {
     try {
@@ -132,7 +125,6 @@ router.delete('/:id',
 
 /* Add users to group */
 router.post('/addToGroup',
-  LoggerMiddleware,
   isAuthenticated,
   validator.body(AddUsersToGroupSchema),
   async (req, res) => {

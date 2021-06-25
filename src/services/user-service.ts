@@ -58,6 +58,18 @@ export default class UserService {
     });
   }
 
+  getUsersByIds(userIds: number[]): Promise<UserModel[] | null> {
+    return this.userModel.findAll({
+      where: {
+        isDeleted: false,
+        id: {
+          [Op.in]: userIds
+        }
+      },
+      include: this.includeGroups
+    });
+  }
+
   createUser(user: UserAttributes): Promise<Partial<UserModel> | null> {
     return this.userModel.create(user);
   }
@@ -83,16 +95,20 @@ export default class UserService {
   }
 
   async addUsersToGroup(groupId: string, userIds: number[]): Promise<any> {
-    const users = await Promise.all(userIds.map(async (userId: number) => {
-      return await this.getUserById(userId);
-    }));
+    const usersQuery = this.getUsersByIds(userIds);
+    const groupQuery = this.groupService.getGroupById(groupId);
 
-    const group = await this.groupService.getGroupById(groupId);
+    const [users, group] = await Promise.all([usersQuery, groupQuery]);
+
+    if (!users || !group) {
+      return 0;
+    }
 
     return db.transaction(async (t) => {
-      return await Promise.all(users.map(async (user: any) => {
-        return await user.addGroup(group, { transaction: t });
+      const count = await Promise.all(users.map((user: any) => {
+        return user.addGroup(group, { transaction: t });
       }));
+      return count.length;
     });
   }
 }
